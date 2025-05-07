@@ -22,6 +22,7 @@ class TrainLogger:
         # plot rewards per episode
         episodes = list(range(1, len(self.rewards) + 1))
 
+        # reward plot
         plt.plot(episodes, self.rewards, label="Reward")
         plt.title("Training Reward")
         plt.xlabel("Episode")
@@ -30,7 +31,16 @@ class TrainLogger:
         plt.savefig(f"{self.log_dir}/{label}_reward_plot.png")
         plt.close()
 
-        # plot smoothes success rate 
+        # return plot
+        plt.plot(episodes, self.rewards, label="Return", color="orange")
+        plt.title("Episodic Return")
+        plt.xlabel("Episode")
+        plt.ylabel("Return")
+        plt.grid(True)
+        plt.savefig(f"{self.log_dir}/{label}_return_plot.png")
+        plt.close()
+
+        # plot success rate (moving average)
         window = 50
         success_rate = np.convolve(self.success_flags, np.ones(window)/window, mode="valid")
         plt.plot(range(window, len(self.success_flags) + 1), success_rate, label="Success Rate")

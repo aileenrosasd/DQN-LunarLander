@@ -51,9 +51,12 @@ def train(
 
             if done:
                 # check if episode is considered successful
-                success = (info.get("success", False) or reward >= 200)
+                #success = (info.get("success", False) or reward >= 200)
+                success = reward >= 100 and done
+                #print(f"Episode {episode + 1}: Total Reward = {total_reward:.2f}, Success = {success}")
+
                 break
-                
+
         # log rewards and success info for the episode
         logger.log_episode(total_reward, success)
 
