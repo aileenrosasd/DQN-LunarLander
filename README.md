@@ -18,3 +18,6 @@
 `pip install torch gymnasium[box2d] matplotlib numpy`
 ## Run training
 `python main.py`
+
+# Team Information
+### Aileen Rosas and Bernard Bega
