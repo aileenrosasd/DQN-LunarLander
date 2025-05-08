@@ -1,3 +1,4 @@
+import argparse
 import gymnasium as gym
 import numpy as np
 import torch
@@ -21,8 +22,15 @@ def train(
     state_dim = env.observation_space.shape[0]
     action_dim = env.action_space.n
     
+    # sets up the ability to pass the argument for using double DQN or not
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--double_dqn", action="store_true", help="Use Double DQN instead of DQN")
+    args = parser.parse_args()
+
     # initialize agent
-    agent = DQNAgent(state_dim, action_dim)
+    # python main.py is the base DQN
+    # python main.py --double_dqn is the double DQN model
+    agent = DQNAgent(state_dim, action_dim, use_double_dqn=args.double_dqn)
 
     # initialize logger for tracking rewards and success rates for episodes
     logger = TrainLogger(log_dir="results")
@@ -66,7 +74,7 @@ def train(
             print(f"Episode {episode+1}, Avg Reward: {avg_reward:.2f}, Epsilon: {agent.epsilon:.2f}")
     
     # save reward/success plots and final model
-    logger.save_plots(label="dqn")
+    logger.save_plots(label="double_dqn" if args.double_dqn else "dqn")
     torch.save(agent.q_network.state_dict(), "results/dqn_model.pth")
     env.close()
 
