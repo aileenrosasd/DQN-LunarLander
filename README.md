@@ -9,13 +9,15 @@
 ###            - Matplotlib
 ###            - NumPy
 
-## Create virtual environment
-`python3 -m venv dqn_env`
-####
-`source dqn_env/bin/activate`
 ## Install Dependencies
 `pip install -upgrade pip`
 `pip install torch gymnasium[box2d] matplotlib numpy`
+
+## Create virtual environment
+`python3 -m venv dqn_env`
+## Activate to run main
+`source dqn_env/bin/activate`
+
 ## Run training
 `python main.py`
 
