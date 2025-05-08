@@ -12,7 +12,8 @@ class DQNAgent:
         self, state_dim: int, action_dim: int, buffer_size: int = 100000,
         batch_size: int = 64, gamma: float = 0.99, lr: float = 1e-3,
         tau: float = 1e-3, epsilon_start: float = 1.0, epsilon_end: float = 0.01,
-        epsilon_decay: float = 0.995, target_update_freq: int = 100
+        epsilon_decay: float = 0.995, target_update_freq: int = 100,
+        use_double_dqn=False
     ):
         self.state_dim = state_dim
         self.action_dim = action_dim
@@ -38,6 +39,9 @@ class DQNAgent:
 
         # initialize replay buffer
         self.replay_buffer = ReplayBuffer(buffer_size, batch_size)
+
+        # define whether double DQN will be used or not
+        self.use_double_dqn = use_double_dqn
 
     def select_action(self, state: np.ndarray) -> int:
         # choose random action or best q value 
@@ -73,7 +77,13 @@ class DQNAgent:
 
         # compute target q values using target network
         with torch.no_grad():
-            next_q_values = self.target_network(next_states).max(1)[0].unsqueeze(1)
+            if self.use_double_dqn:
+                # Double DQN: action selection from q_network, evaluation from target_network
+                next_actions = self.q_network(next_states).argmax(1, keepdim=True)
+                next_q_values = self.target_network(next_states).gather(1, next_actions)
+            else:
+                # Standard DQN
+                next_q_values = self.target_network(next_states).max(1)[0].unsqueeze(1)
 
         target_q = rewards + (self.gamma * next_q_values * (1 - dones))
         
