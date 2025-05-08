@@ -6,13 +6,11 @@ def load_and_plot():
     colors = ["blue", "green"]
     window = 50
 
+    # Reward Plot
     plt.figure(figsize=(10, 6))
-
-    # Plot Reward
     for label, color in zip(labels, colors):
         rewards = np.load(f"results/{label}_rewards.npy")
         plt.plot(rewards, label=f"{label.upper()} Reward", color=color)
-
     plt.title("Reward Comparison")
     plt.xlabel("Episode")
     plt.ylabel("Reward")
@@ -21,13 +19,25 @@ def load_and_plot():
     plt.savefig("results/comparison_reward_plot.png")
     plt.close()
 
-    # Plot Success Rate
+    # Return Plot (same data as reward, different style or interpretation if needed)
+    plt.figure(figsize=(10, 6))
+    for label, color in zip(labels, colors):
+        rewards = np.load(f"results/{label}_rewards.npy")
+        plt.plot(rewards, label=f"{label.upper()} Return", linestyle="--", color=color)
+    plt.title("Episodic Return Comparison")
+    plt.xlabel("Episode")
+    plt.ylabel("Return")
+    plt.legend()
+    plt.grid(True)
+    plt.savefig("results/comparison_return_plot.png")
+    plt.close()
+
+    # Success Rate Plot
     plt.figure(figsize=(10, 6))
     for label, color in zip(labels, colors):
         success = np.load(f"results/{label}_success.npy")
         smoothed = np.convolve(success, np.ones(window)/window, mode='valid')
         plt.plot(range(window, len(success)+1), smoothed, label=f"{label.upper()} Success", color=color)
-
     plt.title("Success Rate Comparison")
     plt.xlabel("Episode")
     plt.ylabel("Success Rate (Moving Avg)")
