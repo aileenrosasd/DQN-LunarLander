@@ -57,3 +57,7 @@ class TrainLogger:
             "avg_reward": np.mean(self.rewards[-n:]),
             "success_rate": np.mean(self.success_flags[-n:]) * 100
         }
+
+    def save_data(self, label: str = "dqn"):
+        np.save(f"{self.log_dir}/{label}_rewards.npy", np.array(self.rewards))
+        np.save(f"{self.log_dir}/{label}_success.npy", np.array(self.success_flags))

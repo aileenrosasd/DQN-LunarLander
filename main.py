@@ -74,7 +74,9 @@ def train(
             print(f"Episode {episode+1}, Avg Reward: {avg_reward:.2f}, Epsilon: {agent.epsilon:.2f}")
     
     # save reward/success plots and final model
-    logger.save_plots(label="double_dqn" if args.double_dqn else "dqn")
+    label = "double_dqn" if args.double_dqn else "dqn"
+    logger.save_plots(label=label)
+    logger.save_data(label=label)
     torch.save(agent.q_network.state_dict(), "results/dqn_model.pth")
     env.close()
 
